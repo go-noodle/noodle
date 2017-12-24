@@ -2,8 +2,8 @@
 
 [![Build
 Status](https://travis-ci.org/andviro/noodle.svg?branch=master)](https://travis-ci.org/andviro/noodle)
-[![Coverage](http://gocover.io/_badge/gopkg.in/andviro/noodle.v2?0)](http://gocover.io/gopkg.in/andviro/noodle.v2)
-[![GoDoc](http://godoc.org/gopkg.in/andviro/noodle.v2?status.png)](http://godoc.org/gopkg.in/andviro/noodle.v2)
+[![Coverage](http://gocover.io/_badge/github.com/go-noodle/noodle?0)](http://gocover.io/github.com/go-noodle/noodle)
+[![GoDoc](http://godoc.org/github.com/go-noodle/noodle?status.png)](http://godoc.org/github.com/go-noodle/noodle)
 
 Noodle is a tiny and (almost) unopinionated Golang middleware stack. It borrows its ideas from
 [Stack](https://github.com/alexedwards/stack.git) package, but emphasises on usage of the
@@ -21,7 +21,7 @@ handler chains.
 * Includes handler adapter collection that allow integration of third-party
   middlewares
 * Comes with a [minimalistic web application
-  framework](https://github.com/andviro/noodle/tree/v2/wok) based on
+  framework](https://github.com/go-noodle/wok) based on
   [httprouter](https://github.com/julienschmidt/httprouter) that has route groups and supports
   global, per-route and per-group noodle middleware.
 
@@ -30,7 +30,7 @@ handler chains.
 ### Installation
 
 ```
-go get gopkg.in/andviro/noodle.v2
+go get github.com/go-noodle/noodle
 ```
 
 ### Sample application
@@ -42,8 +42,8 @@ import (
 	"fmt"
 	"net/http"
 
-	mw "gopkg.in/andviro/noodle.v2/middleware"
-	"gopkg.in/andviro/noodle.v2/wok"
+	mw "github.com/go-noodle/middleware"
+	"github.com/go-noodle/wok"
 )
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -73,7 +73,7 @@ func main() {
 }
 ```
 
-A little more involved [example](https://github.com/andviro/noodle/blob/v2/examples/wok/main.go)
+A little more involved [example](https://github.com/go-noodle/examples/blob/master/wok/main.go)
 using `wok` subpackage.
 
 ## Using the package
@@ -110,7 +110,7 @@ func HTTPAuth(authFunc func(username, password string) bool) noodle.Middleware
 ```
 
 Note that similar [HTTP Basic Auth
-middleware](https://godoc.org/gopkg.in/andviro/noodle.v2/middleware#HTTPAuth) is included in
+middleware](https://godoc.org/github.com/go-noodle/middleware#HTTPAuth) is included in
 `middleware` subpackage discussed below.
 
 ### Building the noodle chains
@@ -130,7 +130,7 @@ At any moment `noodle.Chain` can be extended by calling `Use()` method with
 some additional middlewares as arguments. Each `Use()` call creates new
 middleware chain totally independent from parent. The following example extends
 root chain with variables from `gorilla/mux` router. For standalone example of `gorilla/mux` usage
-see [provided sample code](https://github.com/andviro/noodle/blob/v2/examples/gorilla/main.go)
+see [provided sample code](https://github.com/go-noodle/examples/blob/master/gorilla/main.go)
 and `adapt/gorilla` subpackage.
 
 ```go
@@ -163,7 +163,7 @@ http.Handle("/", n.Then(index))
 ## Baked-in middlewares
 
 Package `noodle` comes with a collection of essential middlewares organized into the `middleware`
-package. Import `gopkg.in/andviro/noodle.v2/middleware` to get access to the following:
+package. Import `github.com/go-noodle/middleware` to get access to the following:
 
 * HTTP Basic Auth middleware
 * Logger
@@ -182,7 +182,7 @@ middleware wraps the panic object into `error` and passes it to pre-defined hand
 import (
     "log"
 
-    "gopkg.in/andviro/noodle.v2/middleware"
+    "github.com/go-noodle/middleware"
 )
 
 func panickyIndex(w http.ResponseWriter, r *http.Request) {
@@ -240,12 +240,12 @@ http.Handle("/", n.Then(index))
 For convenience, initial `noodle.Chain` with logging, recovery and
 request-local store can be created with `middleware.Default()` constructor.
 
-Refer to package [documentation](https://godoc.org/gopkg.in/andviro/noodle.v2/middleware) for
+Refer to package [documentation](https://godoc.org/github.com/go-noodle/middleware) for
 further information on provided middlewares.
 
 ## Rendering of handler results
 
-Package [render](https://godoc.org/gopkg.in/andviro/noodle.v2/render) provides
+Package [render](https://godoc.org/github.com/go-noodle/render) provides
 basic middleware for serialization of handler-supplied values, similar to the
 example above. The only difference is that handler must call `render.Yield`
 function to pass HTTP status code and its data back to the render middleware
@@ -255,8 +255,8 @@ pre-compiled `html/template` object to render data object into HTML.
 
 ```go
 import (
-    mw "gopkg.in/andviro/noodle.v2/middleware"
-    "gopkg.in/andviro/noodle.v2/render"
+    mw "github.com/go-noodle/middleware"
+    "github.com/go-noodle/render"
     "html/template"
 )
 
@@ -300,14 +300,14 @@ http.Handle("/anyContent", n.Use(render.ContentType(tpl)).Then(index))
 
 ## Request binding 
 
-Package [bind](http://godoc.org/gopkg.in/andviro/noodle.v2/bind) provides
+Package [bind](http://godoc.org/github.com/go-noodle/bind) provides
 middleware for loading request body into supplied model. Handlers retrieve
 bound objects using `bind.GetData` function.
 
 ```go
 import (
-    mw "gopkg.in/andviro/noodle.v2/middleware"
-    "gopkg.in/andviro/noodle.v2/bind"
+    mw "github.com/go-noodle/middleware"
+    "github.com/go-noodle/bind"
 )
 
 type TestStruct struct {
@@ -359,9 +359,9 @@ http.Handle("/", n.Then(indexHandler))
 ## Convenience adaptors
 
 For compatibility with Gorilla [mux](https://github.com/gorilla/mux)  corresponding
-[middleware](http://godoc.org/gopkg.in/andviro/noodle.v2/adapt/gorilla) is provided.
+[middleware](http://godoc.org/github.com/go-noodle/adapt/gorilla) is provided.
 
 ## License
 
 This code is released under 
-[MIT](https://github.com/andviro/noodle/blob/master/LICENSE) license.
+[MIT](https://github.com/andviro/blob/master/LICENSE) license.
