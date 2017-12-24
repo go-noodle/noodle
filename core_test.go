@@ -3,7 +3,7 @@ package noodle_test
 import (
 	"context"
 	"fmt"
-	"gopkg.in/andviro/noodle.v2"
+	"github.com/go-noodle/noodle"
 	"gopkg.in/tylerb/is.v1"
 	"net/http"
 	"net/http/httptest"
