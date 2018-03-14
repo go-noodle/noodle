@@ -135,7 +135,7 @@ and `adapt/gorilla` subpackage.
 
 ```go
 func GorillaVars(next http.HandlerFunc) http.HandlerFunc {
-    return func(w http.ResponseWriter, r *http.Request) error {
+    return func(w http.ResponseWriter, r *http.Request) {
         return next(w, noodle.WithValue(r, "Vars", mux.Vars(r))
     }
 }
